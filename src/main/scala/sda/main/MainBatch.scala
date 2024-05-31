@@ -1,8 +1,10 @@
 package sda.main
 import org.apache.spark.sql.SparkSession
 import sda.args._
+import sda.reader.Reader
 import sda.parser.ConfigurationParser
 import  sda.traitement.ServiceVente._
+
 object MainBatch {
   def main(args: Array[String]): Unit = {
     implicit val spark: SparkSession = SparkSession
@@ -20,7 +22,11 @@ object MainBatch {
       }
       case _ => throw new Exception("Invalid reader type. Supported reader format : csv, json and xml in feature")
     }
-    val df=reader.read().formatter()
+    println(reader)
+/*
+    println(reader)
+    val df = reader.read().formatter()
+
     println("***********************Resultat Question1*****************************")
     df.show(20)
     println("***********************Resultat Question2*****************************")
@@ -29,5 +35,7 @@ object MainBatch {
     df.calculTTC.extractDateEndContratVille.show
     println("***********************Resultat Question4*****************************")
     df.calculTTC.extractDateEndContratVille.contratStatus.show(20)
+
+    */
   }
 }

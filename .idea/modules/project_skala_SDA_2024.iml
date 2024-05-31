@@ -36,6 +36,12 @@
     <orderEntry type="library" name="sbt: com.google.flatbuffers:flatbuffers-java:1.12.0:jar" level="project" />
     <orderEntry type="library" name="sbt: com.google.guava:guava:16.0.1:jar" level="project" />
     <orderEntry type="library" name="sbt: com.google.protobuf:protobuf-java:3.14.0:jar" level="project" />
+    <orderEntry type="library" name="sbt: com.lihaoyi:geny_2.12:1.1.0:jar" level="project" />
+    <orderEntry type="library" name="sbt: com.lihaoyi:ujson_2.12:3.3.1:jar" level="project" />
+    <orderEntry type="library" name="sbt: com.lihaoyi:upack_2.12:3.3.1:jar" level="project" />
+    <orderEntry type="library" name="sbt: com.lihaoyi:upickle-core_2.12:3.3.1:jar" level="project" />
+    <orderEntry type="library" name="sbt: com.lihaoyi:upickle-implicits_2.12:3.3.1:jar" level="project" />
+    <orderEntry type="library" name="sbt: com.lihaoyi:upickle_2.12:3.3.1:jar" level="project" />
     <orderEntry type="library" name="sbt: com.ning:compress-lzf:1.1:jar" level="project" />
     <orderEntry type="library" name="sbt: com.thoughtworks.paranamer:paranamer:2.8:jar" level="project" />
     <orderEntry type="library" name="sbt: com.twitter:chill-java:0.10.0:jar" level="project" />
@@ -145,6 +151,7 @@
     <orderEntry type="library" name="sbt: org.json4s:json4s-core_2.12:3.7.0-M11:jar" level="project" />
     <orderEntry type="library" name="sbt: org.json4s:json4s-jackson_2.12:3.7.0-M11:jar" level="project" />
     <orderEntry type="library" name="sbt: org.json4s:json4s-scalap_2.12:3.7.0-M11:jar" level="project" />
+    <orderEntry type="library" name="sbt: org.json:json:20201115:jar" level="project" />
     <orderEntry type="library" name="sbt: org.lz4:lz4-java:1.8.0:jar" level="project" />
     <orderEntry type="library" name="sbt: org.objenesis:objenesis:2.5.1:jar" level="project" />
     <orderEntry type="library" name="sbt: org.roaringbitmap:RoaringBitmap:0.9.25:jar" level="project" />

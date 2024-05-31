@@ -12,7 +12,6 @@ object ServiceVente {
       dataFrame.withColumn("HTT", split(col("HTT_TVA"), "\\|")(0))
         .withColumn("TVA", split(col("HTT_TVA"), "\\|")(1))
     }
-
     def calculTTC(): DataFrame = {
       // Define a UDF to calculate TTC
       val calculateTTC = udf((htt: String, tva: String) => {
