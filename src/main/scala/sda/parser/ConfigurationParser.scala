@@ -4,6 +4,7 @@ import upickle.default._
 import org.json4s.DefaultFormats
 import org.json4s.jackson.JsonMethods
 import sda.reader._
+import org.json.JSONObject
 
 object ConfigurationParser {
 
@@ -19,8 +20,24 @@ object ConfigurationParser {
   */
 
   def getJsonReaderConfigurationFromJson(jsonUrl: String) = {
-     val jsonString = FileReaderUsingIOSource.getContent(jsonUrl)
-    println(jsonString)
-     JsonMethods.parse(jsonString).extract[JsonReader]
+    println("reading json data")
+    val config = FileReaderUsingIOSource.getContent(jsonUrl)
+    println(config)
+
+    // Parse JSON string
+    val json = new JSONObject(config)
+
+    // Access the content of "path" key
+    val path = json.getString("path")
+
+    // Print the content of "path"
+    println(path)
+    val data = FileReaderUsingIOSource.getContent("src/main/resources/DataForTest/data.json")
+    println(data)
+
+    data
+   // println(jsonString)
+   // val parsed =  JsonMethods.parse(jsonString).extract[JsonReader]
+   // println(parsed)
   }
 }
