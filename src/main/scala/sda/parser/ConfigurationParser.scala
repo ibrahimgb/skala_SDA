@@ -22,8 +22,11 @@ object ConfigurationParser {
   def getJsonReaderConfigurationFromJson(jsonUrl: String) = {
     println("reading json data")
     val config = FileReaderUsingIOSource.getContent(jsonUrl)
+    println(config)
+    val json: ujson.Value  = ujson.read(config)
+    println()
 
-    val data = FileReaderUsingIOSource.getContent("src/main/resources/DataForTest/data.json")
+    val data = FileReaderUsingIOSource.getContent(json("path").str)
 
     data
     //println(jsonString)
