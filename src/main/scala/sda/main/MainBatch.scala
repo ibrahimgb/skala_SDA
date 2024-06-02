@@ -51,7 +51,7 @@ object MainBatch {
         // Extract JSON reading configurations from JsonReader object
 
         val jsonFilePath = reader.path
-        //val multiline = data.multiline
+        //val multiline = reader.multiline
 
         // Read the JSON file into a DataFrame
         val df: DataFrame = spark.read
@@ -71,9 +71,9 @@ object MainBatch {
         println("***********************Resultat Question2*****************************")
         df.calculTTC().show(20)
         println("***********************Resultat Question3*****************************")
-        df.extractDateEndContratVille().show() /////
+        df.extractDateEndContratVille().show(20)
         println("***********************Resultat Question4*****************************")
-        //df.calculTTC.extractDateEndContratVille.contratStatus.show(20)
+        df.contratStatus()
 
   }
 }

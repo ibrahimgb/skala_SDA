@@ -3,7 +3,8 @@ package sda.traitement
 import org.apache.spark.sql.functions._
 import org.apache.spark.sql.{DataFrame, SparkSession}
 import org.apache.spark.sql.types._
-
+import scala.util.parsing.json._
+import java.time.LocalDate
 object ServiceVente {
 
   implicit class DataFrameUtils(dataFrame: DataFrame) {
@@ -27,30 +28,57 @@ object ServiceVente {
         .drop("HTT_TVA")
     }
 
-    def extractDateEndContratVille(): DataFrame = {
-      // Define the schema for MetaTransaction
+
+    def extractDateEndContratVille() = {
+    // Define the schema for the nested MetaTransaction
+
+
+    val schema_MetaTransaction = new StructType()
+      .add("Ville", StringType, false)
+      .add("Date_End_contrat", StringType, false)
+
+    val schema = new StructType()
+      .add("MetaTransaction", ArrayType(schema_MetaTransaction), true)
+
+    // Parse the MetaData JSON column
+    val parsedDF = dataFrame.withColumn("ParsedMetaData", from_json(col("MetaData"), schema))
+
+    // Extract the Date_End_contrat field
+    val extractedDF = parsedDF.withColumn("Date_End_contrat", expr("filter(ParsedMetaData.MetaTransaction, x -> x.Date_End_contrat IS NOT NULL)[0].Date_End_contrat"))
+
+    // Drop the ParsedMetaData column if it's no longer needed
+    // val finalDF = extractedDF.drop("ParsedMetaData")
+
+      extractedDF
+  }
+
+
+
+    def contratStatus(): DataFrame = {
+      // Définir le schéma pour le JSON imbriqué MetaTransaction
       val schema_MetaTransaction = new StructType()
-        .add("Ville", StringType, true)
-        .add("Date_End_contrat", StringType, true)
+        .add("Ville", StringType, false)
+        .add("Date_End_contrat", StringType, false)
 
       val schema = new StructType()
         .add("MetaTransaction", ArrayType(schema_MetaTransaction), true)
 
-      // Extract Date_End_contrat and Ville from MetaData using from_json function
-      val dfWithMeta = dataFrame.withColumn("MetaTransaction", from_json(col("MetaData"), schema))
+      val parsedDF = dataFrame.withColumn("ParsedMetaData", from_json(col("MetaData"), schema))
 
-      // Select Date_End_contrat and Ville from MetaTransaction and format the date
-      val dfWithDateVille = dfWithMeta.withColumn("Date_End_contrat", date_format(to_date(expr("MetaTransaction[0].Date_End_contrat"), "yyyy-MM-dd HH:mm:ss"), "yyyy-MM-dd"))
-        .withColumn("Ville", expr("MetaTransaction[0].Ville"))
 
-      dfWithDateVille
+      val extractedDF = parsedDF.withColumn("Date_End_contrat", expr("filter(ParsedMetaData.MetaTransaction, x -> x.Date_End_contrat IS NOT NULL)[0].Date_End_contrat"))
+
+
+      val currentDate = LocalDate.now().toString
+
+      val finalDF = extractedDF.withColumn("Contrat_Status",
+        when(to_date(col("Date_End_contrat")).lt(lit(currentDate)), "Expired")
+          .otherwise("Actif"))
+
+     // finalDF.drop("ParsedMetaData")
+
+      finalDF
     }
-
-    def contratStatus(): DataFrame = {
-      // Add Contrat_Status column based on Date_End_contrat comparison with the current date
-      dataFrame.withColumn("Contrat_Status", when(col("Date_End_contrat") < current_date(), "Expired").otherwise("Actif"))
-    }
-
 
   }
 
