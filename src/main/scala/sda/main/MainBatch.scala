@@ -26,45 +26,54 @@ object MainBatch {
     Args.parseArguments(args)
 
     Args.parseArguments(args)
-    val reader :  CsvReader = Args.readertype match {
+    val  df: DataFrame= Args.readertype match {
       case "csv" => {
-        ConfigurationParser.getCsvReaderConfigurationFromJson(Args.readerConfigurationFile)
+        val reader = ConfigurationParser.getCsvReaderConfigurationFromJson(Args.readerConfigurationFile)
+
+        println("csv reader is:")
+        println(reader)
+        // Extract CSV reading configurations from CsvReaderConfig object
+        val csvFilePath = reader.path
+        val delimiter = reader.delimiter.getOrElse(",")
+        val header = reader.header.getOrElse(false)
+        // Read the CSV file into a DataFrame
+        val df: DataFrame = spark.read
+          .option("delimiter", delimiter)
+          .option("header", header.toString)
+          .csv(csvFilePath)
+        df
       }
-      //case "json" => {
-      //  ConfigurationParser.getJsonReaderConfigurationFromJson(Args.readerConfigurationFile)
-      //}
+      case "json" => {
+        val reader = ConfigurationParser.getJsonReaderConfigurationFromJson(Args.readerConfigurationFile)
+
+        // Extract JSON reading configurations from JsonReaderConfig object
+        // Parse JSON string to JsonReader object
+        // Extract JSON reading configurations from JsonReader object
+
+        val jsonFilePath = reader.path
+        //val multiline = data.multiline
+
+        // Read the JSON file into a DataFrame
+        val df: DataFrame = spark.read
+          .option("multiline", true)
+          .json(jsonFilePath)
+        df
+      }
       case _ => throw new Exception("Invalid reader type. Supported reader format : csv, json and xml in feature")
     }
-    println(reader)
 
 
-    // Extract CSV reading configurations from CsvReader object
-    val csvFilePath = reader.path
-    val delimiter = reader.delimiter.getOrElse(",")
-    val header = reader.header.getOrElse(false)
-
-    // Read the CSV file into a DataFrame
-    val df: DataFrame = spark.read
-      .option("delimiter", delimiter)
-      .option("header", header.toString)
-      .csv(csvFilePath)
     // Show the DataFrame content
-    df.show()
+    df.show(20)
 
-    // val df = reader.read().formatter()
-
-    df.calculTTC().show(20)
-    df.calculTTC.extractDateEndContratVille().show()
-    /*
         println("***********************Resultat Question1*****************************")
         df.show(20)
         println("***********************Resultat Question2*****************************")
         df.calculTTC().show(20)
         println("***********************Resultat Question3*****************************")
-        df.calculTTC.extractDateEndContratVille.show
+        df.extractDateEndContratVille().show() /////
         println("***********************Resultat Question4*****************************")
-        df.calculTTC.extractDateEndContratVille.contratStatus.show(20)
+        //df.calculTTC.extractDateEndContratVille.contratStatus.show(20)
 
-        */
   }
 }
