@@ -44,7 +44,7 @@ object ServiceVente {
     val parsedDF = dataFrame.withColumn("ParsedMetaData", from_json(col("MetaData"), schema))
 
     // Extract the Date_End_contrat field
-    val extractedDF = parsedDF.withColumn("Date_End_contrat", expr("filter(ParsedMetaData.MetaTransaction, x -> x.Date_End_contrat IS NOT NULL)[0].Date_End_contrat"))
+    val extractedDF = parsedDF.withColumn("Date_End_contrat", expr("filter(ParsedMetaData.MetaTransaction, x -> x.Date_End_contrat IS NOT NULL)[0].Date_End_contrat")).drop("ParsedMetaData")
 
     // Drop the ParsedMetaData column if it's no longer needed
     // val finalDF = extractedDF.drop("ParsedMetaData")
@@ -75,8 +75,9 @@ object ServiceVente {
         when(to_date(col("Date_End_contrat")).lt(lit(currentDate)), "Expired")
           .otherwise("Actif"))
 
-     // finalDF.drop("ParsedMetaData")
-
+     finalDF.drop("ParsedMetaData")
+      println("is showing?")
+finalDF.show()
       finalDF
     }
 
